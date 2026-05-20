@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Cat 4 You - Your complete guide to cats, breeds, care, and fun facts! Discover everything about your favorite feline friends.">
+  <meta name="keywords" content="cats, cat breeds, cat care, cat facts, feline, kittens">
+  <meta name="author" content="Cat 4 You">
+  <title>Cat 4 You — Your Complete Guide to Cats</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            cat: {
+              50: '#FFF7ED', 100: '#FFEDD5', 200: '#FED7AA', 300: '#FDBA74',
+              400: '#FB923C', 500: '#F97316', 600: '#EA580C', 700: '#C2410C',
+              800: '#9A3412', 900: '#7C2D12'
+            },
+            cream: { 50: '#FFFBF5', 100: '#FFF5E8', 200: '#FFECD1' },
+            dark: { 800: '#1E1E2E', 900: '#141422' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* Loading Screen */
+    #loader {
+      position: fixed; inset: 0; z-index: 9999;
+      background: #FFF7ED;
+      display: flex; align-items: center; justify-content: center; flex-direction: column;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+    #loader.hidden { opacity: 0; visibility: hidden; }
+    .loader-cat {
+      width: 60px; height: 60px;
+      border: 4px solid #FED7AA;
+      border-top-color: #F97316;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Scroll Reveal */
+    .reveal {
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.8s cubic-bezier(0.5,0,0,1), transform 0.8s cubic-bezier(0.5,0,0,1);
+    }
+    .reveal.active { opacity: 1; transform: translateY(0); }
+    .delay-100 { transition-delay: 0.1s; }
+    .delay-200 { transition-delay: 0.2s; }
+    .delay-300 { transition-delay: 0.3s; }
+    .delay-400 { transition-delay: 0.4s; }
+
+    /* Hero Animations */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hero-anim { animation: fadeInUp 1s ease-out forwards; }
+    .hero-anim-d1 { animation: fadeInUp 1s ease-out 0.2s forwards; opacity: 0; }
+    .hero-anim-d2 { animation: fadeInUp 1s ease-out 0.4s forwards; opacity: 0; }
+    .hero-anim-d3 { animation: fadeInUp 1s ease-out 0.6s forwards; opacity: 0; }
+
+    /* Paw Print Animation */
+    @keyframes pawFloat {
+      0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.15; }
+      50% { transform: translateY(-20px) rotate(10deg); opacity: 0.3; }
+    }
+    .paw-float { animation: pawFloat 4s ease-in-out infinite; }
+
+    /* Gallery Hover */
+    .gallery-item img {
+      transition: transform 0.5s ease, filter 0.5s ease;
+    }
+    .gallery-item:hover img {
+      transform: scale(1.08);
+    }
+    .gallery-item .overlay {
+      opacity: 0; transition: opacity 0.4s ease;
+    }
+    .gallery-item:hover .overlay { opacity: 1; }
+
+    /* Lightbox */
+    #lightbox {
+      position: fixed; inset: 0; z-index: 9998;
+      background: rgba(0,0,0,0.9);
+      display: none; align-items: center; justify-content: center;
+      cursor: zoom-out;
+    }
+    #lightbox.active { display: flex; }
+    #lightbox img {
+      max-width: 90vw; max-height: 85vh;
+      border-radius: 12px;
+      animation: lbIn 0.3s ease;
+    }
+    @keyframes lbIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    /* Card Hover */
+    .breed-card {
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+    .breed-card:hover {
+      transform: translateY(-8px);
+    }
+
+    /* Fun Fact Card */
+    .fact-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .fact-card:hover {
+      transform: translateY(-4px) scale(1.02);
+    }
+
+    /* Pulse for scroll-to-top */
+    @keyframes gentlePulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(249,115,22,0.4); }
+      50% { box-shadow: 0 0 0 10px rgba(249,115,22,0); }
+    }
+    .scroll-top-btn { animation: gentlePulse 2s infinite; }
+
+    /* Video Container */
+    .video-container {
+      position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;
+      border-radius: 16px;
+    }
+    .video-container iframe {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      border: 0; border-radius: 16px;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #FFF7ED; }
+    ::-webkit-scrollbar-thumb { background: #FDBA74; border-radius: 99px; }
+    ::-webkit-scrollbar-thumb:hover { background: #F97316; }
+    .dark ::-webkit-scrollbar-track { background: #1E1E2E; }
+    .dark ::-webkit-scrollbar-thumb { background: #9A3412; }
+
+    /* Quote transition */
+    #cat-quote {
+      transition: opacity 0.4s ease;
+    }
+
+    /* Slider */
+    .slider-track {
+      transition: transform 0.5s ease;
+    }
+
+    /* Tip card icon bounce */
+    @keyframes iconBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    .tip-icon:hover { animation: iconBounce 0.5s ease; }
+
+    /* Nav active indicator */
+    .nav-link {
+      position: relative;
+    }
+    .nav-link::after {
+      content: ''; position: absolute; bottom: -4px; left: 50%; width: 0; height: 2px;
+      background: #F97316; transition: width 0.3s ease, left 0.3s ease; border-radius: 2px;
+    }
+    .nav-link:hover::after, .nav-link.active::after {
+      width: 100%; left: 0;
+    }
+  </style>
+</head>
+
+<body class="font-sans bg-cream-50 text-dark-800 dark:bg-dark-900 dark:text-gray-100 transition-colors duration-500">
+
+  <!-- ====== LOADER ====== -->
+  <div id="loader">
+    <div class="loader-cat"></div>
+    <p class="mt-4 text-cat-500 font-semibold text-lg tracking-wide">🐱 Loading Cat 4 You...</p>
+  </div>
+
+  <!-- ====== LIGHTBOX ====== -->
+  <div id="lightbox" onclick="closeLightbox()">
+    <button onclick="closeLightbox()" class="absolute top-6 right-6 text-white text-4xl hover:text-cat-400 transition z-10">&times;</button>
+    <img id="lightbox-img" src="" alt="Cat preview">
+  </div>
+
+  <!-- ====== NAVIGATION ====== -->
+  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 md:h-20">
+        <!-- Logo -->
+        <a href="#home" class="flex items-center gap-2 group">
+          <span class="text-3xl group-hover:rotate-12 transition-transform duration-300">🐱</span>
+          <span class="text-xl font-bold bg-gradient-to-r from-cat-500 to-cat-700 bg-clip-text text-transparent">
+            Cat 4 You
+          </span>
+        </a>
+
+        <!-- Desktop Nav -->
+        <div class="hidden lg:flex items-center gap-1">
+          <a href="#home" class="nav-link px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-cat-500 transition">Home</a>
+          <a href="#about" class="nav-link px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-cat-500 transition">About</a>
+          <a href="#breeds" class="nav-link px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-cat-500 transition">Breeds</a>
+          <a href="#gallery" class="nav-link px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-cat-500 transition">Gallery</a>
+          <a href="#videos" class="nav-link px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-cat-500 transition">Videos</a>
+          <a href="#tips" class="nav-link px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-cat-500 transition">Care Tips</a>
+          <a href="#facts" class="nav-link px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-cat-500 transition">Fun Facts</a>
+          <a href="#contact" class="nav-link px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-cat-500 transition">Contact</a>
+        </div>
+
+        <!-- Right Controls -->
+        <div class="flex items-center gap-3">
+          <!-- Dark Mode Toggle -->
+          <button id="darkToggle" onclick="toggleDarkMode()" class="w-10 h-10 rounded-full flex items-center justify-center bg-cat-100 dark:bg-dark-800 hover:bg-cat-200 dark:hover:bg-gray-700 transition" title="Toggle Dark Mode">
+            <span id="darkIcon" class="text-xl">🌙</span>
+          </button>
+          <!-- Mobile Menu Toggle -->
+          <button id="menuToggle" onclick="toggleMobileMenu()" class="lg:hidden w-10 h-10 rounded-full flex items-center justify-center bg-cat-100 dark:bg-dark-800 hover:bg-cat-200 transition">
+            <span class="iconify text-xl" data-icon="lucide:menu" id="menuIcon"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="lg:hidden hidden bg-white/95 dark:bg-dark-900/95 backdrop-blur-md border-t border-cat-100 dark:border-gray-700">
+      <div class="px-4 py-4 space-y-1">
+        <a href="#home" onclick="closeMobileMenu()" class="block px-4 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-cat-50 dark:hover:bg-gray-800 hover:text-cat-600 transition">🏠 Home</a>
+        <a href="#about" onclick="closeMobileMenu()" class="block px-4 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-cat-50 dark:hover:bg-gray-800 hover:text-cat-600 transition">🐾 About Cats</a>
+        <a href="#breeds" onclick="closeMobileMenu()" class="block px-4 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-cat-50 dark:hover:bg-gray-800 hover:text-cat-600 transition">🐱 Cat Breeds</a>
+        <a href="#gallery" onclick="closeMobileMenu()" class="block px-4 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-cat-50 dark:hover:bg-gray-800 hover:text-cat-600 transition">📸 Gallery</a>
+        <a href="#videos" onclick="closeMobileMenu()" class="block px-4 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-cat-50 dark:hover:bg-gray-800 hover:text-cat-600 transition">🎬 Videos</a>
+        <a href="#tips" onclick="closeMobileMenu()" class="block px-4 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-cat-50 dark:hover:bg-gray-800 hover:text-cat-600 transition">💡 Care Tips</a>
+        <a href="#facts" onclick="closeMobileMenu()" class="block px-4 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-cat-50 dark:hover:bg-gray-800 hover:text-cat-600 transition">✨ Fun Facts</a>
+        <a href="#contact" onclick="closeMobileMenu()" class="block px-4 py-3 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-cat-50 dark:hover:bg-gray-800 hover:text-cat-600 transition">✉️ Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ====== HERO ====== -->
+  <section id="home" class="relative min-h-screen flex items-center overflow-hidden">
+    <!-- Background Image -->
+    <div class="absolute inset-0">
+      <img src="https://picsum.photos/seed/cathero/1920/1080.jpg" alt="Beautiful cat" class="w-full h-full object-cover">
+      <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+    </div>
+
+    <!-- Decorative Paw Prints -->
+    <div class="absolute top-32 right-20 text-6xl text-white/10 paw-float hidden md:block">🐾</div>
+    <div class="absolute bottom-40 right-40 text-4xl text-white/10 paw-float hidden md:block" style="animation-delay:1.5s">🐾</div>
+    <div class="absolute top-48 right-60 text-3xl text-white/10 paw-float hidden md:block" style="animation-delay:2.5s">🐾</div>
+
+    <!-- Content -->
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
+      <div class="max-w-2xl">
+        <div class="hero-anim inline-flex items-center gap-2 bg-cat-500/20 backdrop-blur-sm border border-cat-400/30 rounded-full px-5 py-2 mb-6">
+          <span class="text-cat-300 text-sm font-medium">🐾 Welcome to the world of cats</span>
+        </div>
+        <h1 class="hero-anim-d1 text-4xl sm:text-5xl md:text-7xl font-bold text-white leading-tight tracking-tight">
+          Cat <span class="text-cat-400">4</span> You
+        </h1>
+        <p class="hero-anim-d2 mt-6 text-lg md:text-xl text-gray-300 leading-relaxed max-w-lg">
+          Your complete guide to cats, breeds, care, and fun facts! Discover the wonderful world of our feline friends. 🐱
+        </p>
+        <div class="hero-anim-d3 mt-8 flex flex-wrap gap-4">
+          <a href="#breeds" class="inline-flex items-center gap-2 bg-cat-500 hover:bg-cat-600 text-white font-medium px-8 py-3.5 rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-cat-500/30 hover:-translate-y-0.5">
+            Explore Breeds
+            <span class="iconify" data-icon="lucide:arrow-right"></span>
+          </a>
+          <a href="#about" class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white font-medium px-8 py-3.5 rounded-full transition-all duration-300">
+            Learn More
+          </a>
+        </div>
+
+        <!-- Stats -->
+        <div class="hero-anim-d3 mt-12 flex gap-8">
+          <div>
+            <p class="text-3xl font-bold text-cat-400">70+</p>
+            <p class="text-sm text-gray-400">Cat Breeds</p>
+          </div>
+          <div>
+            <p class="text-3xl font-bold text-cat-400">10K+</p>
+            <p class="text-sm text-gray-400">Cat Lovers</p>
+          </div>
+          <div>
+            <p class="text-3xl font-bold text-cat-400">500+</p>
+            <p class="text-sm text-gray-400">Fun Facts</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll Indicator -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
+      <span class="text-white/50 text-xs">Scroll Down</span>
+      <span class="iconify text-white/50 text-xl" data-icon="lucide:chevron-down"></span>
+    </div>
+  </section>
+
+  <!-- ====== FEATURED CATS SLIDER ====== -->
+  <section class="py-16 bg-white dark:bg-dark-800 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-10 reveal">
+        <span class="text-cat-500 font-semibold text-sm uppercase tracking-wider">Featured Friends</span>
+        <h2 class="text-3xl md:text-4xl font-bold mt-2 tracking-tight">Meet Our Stars ⭐</h2>
+      </div>
+      <div class="relative">
+        <div class="overflow-hidden rounded-2xl">
+          <div id="sliderTrack" class="slider-track flex">
+            <div class="min-w-full md:min-w-[50%] lg:min-w-[33.333%] p-3">
+              <div class="relative rounded-2xl overflow-hidden h-72 group cursor-pointer">
+                <img src="https://picsum.photos/seed/featuredcat1/600/400.jpg" alt="Featured cat" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <div class="absolute bottom-4 left-4 text-white">
+                  <p class="font-bold text-lg">Luna</p>
+                  <p class="text-sm text-gray-300">Persian Queen 👑</p>
+                </div>
+              </div>
+            </div>
+            <div class="min-w-full md:min-w-[50%] lg:min-w-[33.333%] p-3">
+              <div class="relative rounded-2xl overflow-hidden h-72 group cursor-pointer">
+                <img src="https://picsum.photos/seed/featuredcat2/600/400.jpg" alt="Featured cat" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <div class="absolute bottom-4 left-4 text-white">
+                  <p class="font-bold text-lg">Milo</p>
+                  <p class="text-sm text-gray-300">Adventurous Tabby 🌿</p>
+                </div>
+              </div>
+            </div>
+            <div class="min-w-full md:min-w-[50%] lg:min-w-[33.333%] p-3">
+              <div class="relative rounded-2xl overflow-hidden h-72 group cursor-pointer">
+                <img src="https://picsum.photos/seed/featuredcat3/600/400.jpg" alt="Featured cat" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <div class="absolute bottom-4 left-4 text-white">
+                  <p class="font-bold text-lg">Cleo</p>
+                  <p class="text-sm text-gray-300">Siamese Diva 💎</p>
+                </div>
+              </div>
+            </div>
+            <div class="min-w-full md:min-w-[50%] lg:min-w-[33.333%] p-3">
+              <div class="relative rounded-2xl overflow-hidden h-72 group cursor-pointer">
+                <img src="https://picsum.photos/seed/featuredcat4/600/400.jpg" alt="Featured cat" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <div class="absolute bottom-4 left-4 text-white">
+                  <p class="font-bold text-lg">Oliver</p>
+                  <p class="text-sm text-gray-300">Maine Coon Giant 🦁</p>
+                </div>
+              </div>
+            </div>
+            <div class="min-w-full md:min-w-[50%] lg:min-w-[33.333%] p-3">
+              <div class="relative rounded-2xl overflow-hidden h-72 group cursor-pointer">
+                <img src="https://picsum.photos/seed/featuredcat5/600/400.jpg" alt="Featured cat" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <div class="absolute bottom-4 left-4 text-white">
+                  <p class="font-bold text-lg">Bella</p>
+                  <p class="text-sm text-gray-300">Ragdoll Angel 😇</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Slider Controls -->
+        <button onclick="slidePrev()" class="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 dark:bg-dark-800/90 shadow-lg flex items-center justify-center hover:bg-cat-500 hover:text-white transition z-10">
+          <span class="iconify" data-icon="lucide:chevron-left"></span>
+        </button>
+        <button onclick="slideNext()" class="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 dark:bg-dark-800/90 shadow-lg flex items-center justify-center hover:bg-cat-500 hover:text-white transition z-10">
+          <span class="iconify" data-icon="lucide:chevron-right"></span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== ABOUT CATS ====== -->
+  <section id="about" class="py-20 md:py-28 bg-cream-50 dark:bg-dark-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <!-- Image -->
+        <div class="reveal relative">
+          <div class="relative">
+            <img src="https://picsum.photos/seed/aboutcat1/600/800.jpg" alt="About cats" class="w-full max-w-md mx-auto rounded-3xl shadow-xl object-cover aspect-[3/4]">
+            <!-- Decorative -->
+            <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-cat-100 dark:bg-cat-900/30 rounded-2xl -z-10"></div>
+            <div class="absolute -top-6 -left-6 w-24 h-24 bg-cat-200 dark:bg-cat-800/30 rounded-full -z-10"></div>
+          </div>
+          <!-- Floating Stats Card -->
+          <div class="absolute -right-4 bottom-8 bg-white dark:bg-dark-800 rounded-2xl shadow-xl p-4 hidden md:block">
+            <p class="text-3xl font-bold text-cat-500">9,500+</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400">Years with humans</p>
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div>
+          <div class="reveal">
+            <span class="inline-flex items-center gap-2 bg-cat-100 dark:bg-cat-900/50 text-cat-600 dark:text-cat-400 font-semibold text-xs uppercase tracking-wider px-4 py-2 rounded-full">
+              <span class="iconify" data-icon="lucide:heart"></span> About Cats
+            </span>
+          </div>
+          <h2 class="reveal delay-100 text-3xl md:text-4xl font-bold mt-4 tracking-tight">
+            The Most Beloved <span class="text-cat-500">Companions</span> on Earth
+          </h2>
+          <p class="reveal delay-200 mt-6 text-gray-600 dark:text-gray-400 leading-relaxed">
+            Cats have been part of human civilization for nearly 10,000 years. Originally domesticated in the Near East, these graceful creatures have captivated hearts across every culture and continent.
+          </p>
+
+          <div class="reveal delay-200 mt-8 space-y-6">
+            <div class="flex gap-4">
+              <div class="w-12 h-12 rounded-xl bg-cat-100 dark:bg-cat-900/50 flex items-center justify-center flex-shrink-0 text-2xl">🏛️</div>
+              <div>
+                <h3 class="font-semibold text-lg">Ancient History</h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm mt-1">Ancient Egyptians worshipped cats as sacred animals. The goddess Bastet, depicted as a cat, was the deity of home and protection.</p>
+              </div>
+            </div>
+            <div class="flex gap-4">
+              <div class="w-12 h-12 rounded-xl bg-cat-100 dark:bg-cat-900/50 flex items-center justify-center flex-shrink-0 text-2xl">🧠</div>
+              <div>
+                <h3 class="font-semibold text-lg">Remarkable Intelligence</h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm mt-1">Cats have 300 million neurons in their cerebral cortex. They can learn tricks, recognize their names, and even understand some human emotions.</p>
+              </div>
+            </div>
+            <div class="flex gap-4">
+              <div class="w-12 h-12 rounded-xl bg-cat-100 dark:bg-cat-900/50 flex items-center justify-center flex-shrink-0 text-2xl">😻</div>
+              <div>
+                <h3 class="font-semibold text-lg">Unique Behavior</h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm mt-1">From purring at 25-150 Hz (which promotes healing) to kneading "making biscuits," every cat behavior has a fascinating purpose.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== CAT BREEDS ====== -->
+  <section id="breeds" class="py-20 md:py-28 bg-white dark:bg-dark-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center reveal">
+        <span class="inline-flex items-center gap-2 bg-cat-100 dark:bg-cat-900/50 text-cat-600 dark:text-cat-400 font-semibold text-xs uppercase tracking-wider px-4 py-2 rounded-full">
+          <span class="iconify" data-icon="lucide:cat"></span> Cat Breeds
+        </span>
+        <h2 class="text-3xl md:text-5xl font-bold mt-4 tracking-tight">Discover Popular Breeds</h2>
+        <p class="mt-4 text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">Each breed has unique characteristics, temperament, and charm. Find the perfect feline friend for you!</p>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="reveal mt-10 max-w-md mx-auto">
+        <div class="relative">
+          <span class="iconify absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl" data-icon="lucide:search"></span>
+          <input type="text" id="breedSearch" oninput="searchBreeds()" placeholder="Search cat breeds..." class="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-cream-50 dark:bg-dark-900 border border-cat-200 dark:border-gray-700 focus:border-cat-500 focus:ring-2 focus:ring-cat-200 dark:focus:ring-cat-800 outline-none transition text-sm">
+        </div>
+      </div>
+
+      <!-- Breed Cards Grid -->
+      <div id="breedGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
+        <!-- Persian -->
+        <div class="breed-card reveal delay-100 bg-cream-50 dark:bg-dark-900 rounded-2xl overflow-hidden shadow-md hover:shadow-xl border border-cat-100 dark:border-gray-700" data-breed="persian">
+          <div class="relative h-56 overflow-hidden">
+            <img src="https://picsum.photos/seed/persiancat/600/400.jpg" alt="Persian Cat" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+            <span class="absolute top-3 right-3 bg-cat-500 text-white text-xs font-semibold px-3 py-1 rounded-full">Popular</span>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold">Persian</h3>
+            <p class="text-gray-600 dark:text-gray-400 text-sm mt-2 leading-relaxed">Known for their luxurious long coats and gentle, calm personalities. Persians are the epitome of feline elegance and make wonderful indoor companions.</p>
+            <div class="flex items-center gap-4 mt-4 text-xs text-gray-500 dark:text-gray-500">
+              <span class="flex items-center gap-1"><span class="iconify" data-icon="lucide:ruler"></span> Medium-Large</span>
+              <span class="flex items-center gap-1"><span class="iconify" data-icon="lucide:heart"></span> Calm</span>
+              <span class="flex items-center gap-1"><span class="iconify" data-icon="lucide:clock"></span> 12-17 yrs</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Siamese -->
+        <div class="breed-card reveal delay-200 bg-cream-50 dark:bg-dark-900 rounded-2xl overflow-hidden shadow-md hover:shadow-xl border border-cat-100 dark:border-gray-700" data-breed="siamese">
+          <div class="relative h-56 overflow-hidden">
+            <img src="https://picsum.photos/seed/siamesecat/600/400.jpg" alt="Siamese Cat" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+            <span class="absolute top-3 right-3 bg-blue-500 text-white text-xs font-semibold px-3 py-1 rounded-full">Vocal</span>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold">Siamese</h3>
+            <p class="text-gray-600 dark:text-gray-400 text-sm mt-2 leading-relaxed">Famous for their striking blue eyes and color-pointed coats. Siamese cats are highly social, vocal, and love being the center of attention.</p>
+            <div class="flex items-center gap-4 mt-4 text-xs text-gray-500 dark:text-gray-500">
+              <span class="flex items-center gap-1"><span class="iconify" data-icon="lucide:ruler"></span> Medium</span>
+              <span class="flex items-center gap-1"><span class="iconify" data-icon="lucide:heart"></span> Social</span>
+              <span class="flex items-center gap-1"><span class="iconify" data-icon="lucide:clock"></span> 15-20 yrs</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Maine Coon -->
+        <div class="breed-card reveal delay-300 bg-cream-50 dark:bg-dark-900 rounded-2xl overflow-hidden shadow-md hover:shadow-xl border border-cat-100 dark:border-gray-700" data-breed="maine coon">
+          <div class="relative h-56 overflow-hidden">
+            <img src="https://picsum.photos/seed/mainecooncat/600/400.jpg" alt="Maine Coon" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+            <span class="absolute top-3 right-3 bg-amber-600 text-white text-xs font-semibold px-3 py-1 rounded-full">Gentle Giant</span>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold">Maine Coon</h3>
+            <p class="text-gray-600 dark:text-gray-400 text-sm mt-2 leading-relaxed">One of the largest domesticated cat breeds, Maine Coons are known for their tufted ears, bushy tails, and remarkably gentle and playful nature.</p>
+            <div class="flex items-center gap-4 mt-4 text-xs text-gray-500 dark:text-gray-500">
+              <span class="flex items-center gap-1"><span class="iconify" data-icon="lucide:ruler"></span> Large</span>
+              <span class="flex items-center gap-1"><span class="iconify" data-icon="lucide:heart"></span> Friendly</span>
+              <span class="flex items-center gap-1"><span class="iconify" data-icon="lucide:clock"></span> 12-15 yrs</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bengal -->
+        <div class="breed-card reveal delay-100 bg-cream-50 dark:bg-dark-900 rounded-2xl overflow-hidden shadow-md hover:shadow-xl border border-cat-100 dark:border-gray-700" data-breed="bengal">
+          <div class="relative h-56 overflow-hidden">
+            <img src="https://picsum.photos/seed/bengalcat/600/400.jpg" alt="Bengal Cat" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+            <span class="absolute top-3 right-3 bg-emerald-500 text-white text-xs font-semibold px-3 py-1 rounded-full">Exotic</span>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold">Bengal</h3>
+            <p class="text-gray-600 dark:text-gray-400 text-sm mt-2 leading-relaxed">With their wild leopard-like spots and boundless energy, Bengals are the athletes of the cat world. They love water and interactive play.</p>
+            <div class="flex items-center gap-4 mt-4 text-xs text-gray-500 dark:text-gray-500">
+              <span class="flex items-center gap-1"><span class="iconify" data-icon="lucide:ruler"></span> Medium-Large</span>
+              <span class="flex items-center gap-1"><span class="iconify" data-icon="lucide:heart"></span> Energetic</span>
+              <span class="flex items-center gap-1"><span class="iconify" data-icon="lucide:clock"></span> 12-16 yrs</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ragdoll -->
+        <div class="breed-card reveal delay-200 bg-cream-50 dark:bg-dark-900 rounded-2xl overflow-hidden shadow-md hover:shadow-xl border border-cat-100 dark:border-gray-700" data-breed="ragdoll">
+          <div class="relative h-56 overflow-hidden">
+            <img src="https://picsum.photos/seed/ragdollcat/600/400.jpg" alt="Ragdoll Cat" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+            <span class="absolute top-3 right-3 bg-pink-500 text-white text-xs font-semibold px-3 py-1 rounded-full">Affectionate</span>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold">Ragdoll</h3>
+            <p class="text-gray-600 dark:text-gray-400 text-sm mt-2 leading-relaxed">Named for their tendency to go limp when held, Ragdolls are large, affectionate cats with stunning blue eyes and semi-long silky coats.</p>
+            <div class="flex items-center gap-4 mt-4 text-xs text-gray-500 dark:text-gray-500">
+              <span class="flex items-center gap-1"><span class="iconify" data-icon="lucide:ruler"></span> Large</span>
+              <span class="flex items-center gap-1"><span class="iconify" data-icon="lucide:heart"></span> Gentle</span>
+              <span class="flex items-center gap-1"><span class="iconify" data-icon="lucide:clock"></span> 12-17 yrs</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scottish Fold -->
+        <div class="breed-card reveal delay-300 bg-cream-50 dark:bg-dark-900 rounded-2xl overflow-hidden shadow-md hover:shadow-xl border border-cat-100 dark:border-gray-700" data-breed="scottish fold">
+          <div class="relative h-56 overflow-hidden">
+            <img src="https://picsum.photos/seed/scottishfoldcat/600/400.jpg" alt="Scottish Fold" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+            <span class="absolute top-3 right-3 bg-violet-500 text-white text-xs font-semibold px-3 py-1 rounded-full">Adorable</span>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold">Scottish Fold</h3>
+            <p class="text-gray-600 dark:text-gray-400 text-sm mt-2 leading-relaxed">Recognizable by their unique folded ears, Scottish Folds are sweet-tempered, adaptable cats that love being around their human families.</p>
+            <div class="flex items-center gap-4 mt-4 text-xs text-gray-500 dark:text-gray-500">
+              <span class="flex items-center gap-1"><span class="iconify" data-icon="lucide:ruler"></span> Medium</span>
+              <span class="flex items-center gap-1"><span class="iconify" data-icon="lucide:heart"></span> Sweet</span>
+              <span class="flex items-center gap-1"><span class="iconify" data-icon="lucide:clock"></span> 11-15 yrs</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- No Results Message -->
+      <div id="noResults" class="hidden text-center py-12">
+        <p class="text-6xl mb-4">😿</p>
+        <p class="text-gray-500 dark:text-gray-400 text-lg">No breeds found. Try a different search!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== GALLERY ====== -->
+  <section id="gallery" class="py-20 md:py-28 bg-cream-50 dark:bg-dark-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center reveal">
+        <span class="inline-flex items-center gap-2 bg-cat-100 dark:bg-cat-900/50 text-cat-600 dark:text-cat-400 font-semibold text-xs uppercase tracking-wider px-4 py-2 rounded-full">
+          <span class="iconify" data-icon="lucide:image"></span> Gallery
+        </span>
+        <h2 class="text-3xl md:text-5xl font-bold mt-4 tracking-tight">Cat Photo Gallery 📸</h2>
+        <p class="mt-4 text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">Click any photo to see it in full size!</p>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-12">
+        <div class="gallery-item reveal delay-100 rounded-2xl overflow-hidden cursor-pointer relative group" onclick="openLightbox(this)">
+          <img src="https://picsum.photos/seed/catgal1/500/500.jpg" alt="Cat photo" class="w-full aspect-square object-cover">
+          <div class="overlay absolute inset-0 bg-cat-500/20 flex items-center justify-center">
+            <span class="iconify text-white text-3xl" data-icon="lucide:zoom-in"></span>
+          </div>
+        </div>
+        <div class="gallery-item reveal delay-200 rounded-2xl overflow-hidden cursor-pointer relative group" onclick="openLightbox(this)">
+          <img src="https://picsum.photos/seed/catgal2/500/500.jpg" alt="Cat photo" class="w-full aspect-square object-cover">
+          <div class="overlay absolute inset-0 bg-cat-500/20 flex items-center justify-center">
+            <span class="iconify text-white text-3xl" data-icon="lucide:zoom-in"></span>
+          </div>
+        </div>
+        <div class="gallery-item reveal delay-100 rounded-2xl overflow-hidden cursor-pointer relative group" onclick="openLightbox(this)">
+          <img src="https://picsum.photos/seed/catgal3/500/500.jpg" alt="Cat photo" class="w-full aspect-square object-cover">
+          <div class="overlay absolute inset-0 bg-cat-500/20 flex items-center justify-center">
+            <span class="iconify text-white text-3xl" data-icon="lucide:zoom-in"></span>
+          </div>
+        </div>
+        <div class="gallery-item reveal delay-200 rounded-2xl overflow-hidden cursor-pointer relative group" onclick="openLightbox(this)">
+          <img src="https://picsum.photos/seed/catgal4/500/500.jpg" alt="Cat photo" class="w-full aspect-square object-cover">
+          <div class="overlay absolute inset-0 bg-cat-500/20 flex items-center justify-center">
+            <span class="iconify text-white text-3xl" data-icon="lucide:zoom-in"></span>
+          </div>
+        </div>
+        <div class="gallery-item reveal delay-100 rounded-2xl overflow-hidden cursor-pointer relative group" onclick="openLightbox(this)">
+          <img src="https://picsum.photos/seed/catgal5/500/500.jpg" alt="Cat photo" class="w-full aspect-square object-cover">
+          <div class="overlay absolute inset-0 bg-cat-500/20 flex items-center justify-center">
+            <span class="iconify text-white text-3xl" data-icon="lucide:zoom-in"></span>
+          </div>
+        </div>
+        <div class="gallery-item reveal delay-200 rounded-2xl overflow-hidden cursor-pointer relative group" onclick="openLightbox(this)">
+          <img src="https://picsum.photos/seed/catgal6/500/500.jpg" alt="Cat photo" class="w-full aspect-square object-cover">
+          <div class="overlay absolute inset-0 bg-cat-500/20 flex items-center justify-center">
+            <span class="iconify text-white text-3xl" data-icon="lucide:zoom-in"></span>
+          </div>
+        </div>
+        <div class="gallery-item reveal delay-100 rounded-2xl overflow-hidden cursor-pointer relative group" onclick="openLightbox(this)">
+          <img src="https://picsum.photos/seed/catgal7/500/500.jpg" alt="Cat photo" class="w-full aspect-square object-cover">
+          <div class="overlay absolute inset-0 bg-cat-500/20 flex items-center justify-center">
+            <span class="iconify text-white text-3xl" data-icon="lucide:zoom-in"></span>
+          </div>
+        </div>
+        <div class="gallery-item reveal delay-200 rounded-2xl overflow-hidden cursor-pointer relative group" onclick="openLightbox(this)">
+          <img src="https://picsum.photos/seed/catgal8/500/500.jpg" alt="Cat photo" class="w-full aspect-square object-cover">
+          <div class="overlay absolute inset-0 bg-cat-500/20 flex items-center justify-center">
+            <span class="iconify text-white text-3xl" data-icon="lucide:zoom-in"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== VIDEOS ====== -->
+  <section id="videos" class="py-20 md:py-28 bg-white dark:bg-dark-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center reveal">
+        <span class="inline-flex items-center gap-2 bg-cat-100 dark:bg-cat-900/50 text-cat-600 dark:text-cat-400 font-semibold text-xs uppercase tracking-wider px-4 py-2 rounded-full">
+          <span class="iconify" data-icon="lucide:play-circle"></span> Videos
+        </span>
+        <h2 class="text-3xl md:text-5xl font-bold mt-4 tracking-tight">Watch Adorable Cats 🎬</h2>
+        <p class="mt-4 text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">Enjoy these handpicked cat videos that will make your day brighter!</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8 mt-12">
+        <div class="reveal delay-100">
+          <div class="video-container shadow-lg">
+            <iframe src="https://www.youtube.com/embed/SB-qEYVdvXA" title="Funny Cats" allowfullscreen loading="lazy"></iframe>
+          </div>
+          <h3 class="font-semibold text-lg mt-4">🐱 Funny Cat Compilation</h3>
+          <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">Hilarious moments that prove cats are the best comedians</p>
+        </div>
+        <div class="reveal delay-200">
+          <div class="video-container shadow-lg">
+            <iframe src="https://www.youtube.com/embed/XyNlqQId-nk" title="Cat Care Tips" allowfullscreen loading="lazy"></iframe>
+          </div>
+          <h3 class="font-semibold text-lg mt-4">😻 Cat Care 101</h3>
+          <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">Essential tips every cat owner should know</p>
+        </div>
+        <div class="reveal delay-100">
+          <div class="video-container shadow-lg">
+            <iframe src="https://www.youtube.com/embed/hY7m5jjJ9mM" title="Cats Being Cats" allowfullscreen loading="lazy"></iframe>
+          </div>
+          <h3 class="font-semibold text-lg mt-4">🐾 Cats Being Cats</h3>
+          <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">Typical cat behavior that we all love and adore</p>
+        </div>
+        <div class="reveal delay-200">
+          <div class="video-container shadow-lg">
+            <iframe src="https://www.youtube.com/embed/tpiyEe_CqB4" title="Kittens First Time" allowfullscreen loading="lazy"></iframe>
+          </div>
+          <h3 class="font-semibold text-lg mt-4">🍼 Kitten's First Adventures</h3>
+          <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">Watch these tiny furballs explore the world for the first time</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== CAT CARE TIPS ====== -->
+  <section id="tips" class="py-20 md:py-28 bg-cream-50 dark:bg-dark-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center reveal">
+        <span class="inline-flex items-center gap-2 bg-cat-100 dark:bg-cat-900/50 text-cat-600 dark:text-cat-400 font-semibold text-xs uppercase tracking-wider px-4 py-2 rounded-full">
+          <span class="iconify" data-icon="lucide:lightbulb"></span> Care Tips
+        </span>
+        <h2 class="text-3xl md:text-5xl font-bold mt-4 tracking-tight">How to Care for Your Cat 💡</h2>
+        <p class="mt-4 text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">Essential tips to keep your feline friend happy and healthy</p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
+        <!-- Feeding -->
+        <div class="reveal delay-100 bg-white dark:bg-dark-800 rounded-2xl p-6 border border-cat-100 dark:border-gray-700 hover:shadow-lg transition-shadow">
+          <div class="tip-icon w-16 h-16 rounded-2xl bg-orange-50 dark:bg-orange-900/30 flex items-center justify-center text-3xl mb-4 cursor-pointer">🍽️</div>
+          <h3 class="text-lg font-bold">Feeding Tips</h3>
+          <ul class="mt-3 space-y-2 text-sm text-gray-600 dark:text-gray-400">
+            <li class="flex gap-2"><span class="text-cat-500">•</span> Provide fresh water daily</li>
+            <li class="flex gap-2"><span class="text-cat-500">•</span> High-quality protein food</li>
+            <li class="flex gap-2"><span class="text-cat-500">•</span> Avoid toxic foods (onions, chocolate)</li>
+            <li class="flex gap-2"><span class="text-cat-500">•</span> Controlled portion sizes</li>
+            <li class="flex gap-2"><span class="text-cat-500">•</span> Wet food for hydration</li>
+          </ul>
+        </div>
+
+        <!-- Grooming -->
+        <div class="reveal delay-200 bg-white dark:bg-dark-800 rounded-2xl p-6 border border-cat-100 dark:border-gray-700 hover:shadow-lg transition-shadow">
+          <div class="tip-icon w-16 h-16 rounded-2xl bg-pink-50 dark:bg-pink-900/30 flex items-center justify-center text-3xl mb-4 cursor-pointer">✂️</div>
+          <h3 class="text-lg font-bold">Grooming Tips</h3>
+          <ul class="mt-3 space-y-2 text-sm text-gray-600 dark:text-gray-400">
+            <li class="flex gap-2"><span class="text-cat-500">•</span> Brush regularly (daily for long-hair)</li>
+            <li class="flex gap-2"><span class="text-cat-500">•</span> Trim nails every 2-3 weeks</li>
+            <li class="flex gap-2"><span class="text-cat-500">•</span> Clean ears weekly</li>
+            <li class="flex gap-2"><span class="text-cat-500">•</span> Dental care with cat toothbrush</li>
+            <li class="flex gap-2"><span class="text-cat-500">•</span> Occasional baths if needed</li>
+          </ul>
+        </div>
+
+        <!-- Health -->
+        <div class="reveal delay-300 bg-white dark:bg-dark-800 rounded-2xl p-6 border border-cat-100 dark:border-gray-700 hover:shadow-lg transition-shadow">
+          <div class="tip-icon w-16 h-16 rounded-2xl bg-green-50 dark:bg-green-900/30 flex items-center justify-center text-3xl mb-4 cursor-pointer">🏥</div>
+          <h3 class="text-lg font-bold">Health Care</h3>
+          <ul class="mt-3 space-y-2 text-sm text-gray-600 dark:text-gray-400">
+            <li class="flex gap-2"><span class="text-cat-500">•</span> Annual vet check-ups</li>
+            <li class="flex gap-2"><span class="text-cat-500">•</span> Keep vaccinations current</li>
+            <li class="flex gap-2"><span class="text-cat-500">•</span> Regular flea & tick prevention</li>
+            <li class="flex gap-2"><span class="text-cat-500">•</span> Spay/neuter your cat</li>
+            <li class="flex gap-2"><span class="text-cat-500">•</span> Watch for behavior changes</li>
+          </ul>
+        </div>
+
+        <!-- Exercise -->
+        <div class="reveal delay-400 bg-white dark:bg-dark-800 rounded-2xl p-6 border border-cat-100 dark:border-gray-700 hover:shadow-lg transition-shadow">
+          <div class="tip-icon w-16 h-16 rounded-2xl bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-3xl mb-4 cursor-pointer">🎾</div>
+          <h3 class="text-lg font-bold">Exercise & Play</h3>
+          <ul class="mt-3 space-y-2 text-sm text-gray-600 dark:text-gray-400">
+            <li class="flex gap-2"><span class="text-cat-500">•</span> 15 min play sessions daily</li>
+            <li class="flex gap-2"><span class="text-cat-500">•</span> Interactive toys & puzzles</li>
+            <li class="flex gap-2"><span class="text-cat-500">•</span> Cat trees for climbing</li>
+            <li class="flex gap-2"><span class="text-cat-500">•</span> Rotate toys regularly</li>
+            <li class="flex gap-2"><span class="text-cat-500">•</span> Laser pointer games</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== FUN FACTS ====== -->
+  <section id="facts" class="py-20 md:py-28 bg-white dark:bg-dark-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center reveal">
+        <span class="inline-flex items-center gap-2 bg-cat-100 dark:bg-cat-900/50 text-cat-600 dark:text-cat-400 font-semibold text-xs uppercase tracking-wider px-4 py-2 rounded-full">
+          <span class="iconify" data-icon="lucide:sparkles"></span> Fun Facts
+        </span>
+        <h2 class="text-3xl md:text-5xl font-bold mt-4 tracking-tight">Amazing Cat Facts ✨</h2>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
+        <div class="fact-card reveal delay-100 bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 rounded-2xl p-6 border border-cat-100 dark:border-cat-900/50">
+          <span class="text-4xl">😴</span>
+          <h3 class="font-bold mt-3">Sleep Champions</h3>
+          <p class="text-gray-600 dark:text-gray-400 text-sm mt-2">Cats sleep 12-16 hours a day, spending about 70% of their lives asleep. They're crepuscular—most active at dawn and dusk!</p>
+        </div>
+        <div class="fact-card reveal delay-200 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl p-6 border border-blue-100 dark:border-blue-900/50">
+          <span class="text-4xl">👃</span>
+          <h3 class="font-bold mt-3">Nose Prints</h3>
+          <p class="text-gray-600 dark:text-gray-400 text-sm mt-2">Each cat's nose print is unique—just like human fingerprints! No two cats have the same nose pattern.</p>
+        </div>
+        <div class="fact-card reveal delay-300 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-2xl p-6 border border-purple-100 dark:border-purple-900/50">
+          <span class="text-4xl">🏃</span>
+          <h3 class="font-bold mt-3">Speed Demons</h3>
+          <p class="text-gray-600 dark:text-gray-400 text-sm mt-2">Domestic cats can run up to 30 mph in short bursts. They can also jump up to 6 times their body length in one leap!</p>
+        </div>
+        <div class="fact-card reveal delay-100 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl p-6 border border-green-100 dark:border-green-900/50">
+          <span class="text-4xl">🔊</span>
+          <h3 class="font-bold mt-3">Super Hearing</h3>
+          <p class="text-gray-600 dark:text-gray-400 text-sm mt-2">Cats can rotate their ears 180 degrees and hear ultrasonic sounds. They detect frequencies that are inaudible to humans and even dogs.</p>
+        </div>
+        <div class="fact-card reveal delay-200 bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-2xl p-6 border border-yellow-100 dark:border-yellow-900/50">
+          <span class="text-4xl">🌊</span>
+          <h3 class="font-bold mt-3">Built-in GPS</h3>
+          <p class="text-gray-600 dark:text-gray-400 text-sm mt-2">Cats have a homing ability that scientists still don't fully understand. Some cats have traveled hundreds of miles to find their way home.</p>
+        </div>
+        <div class="fact-card reveal delay-300 bg-gradient-to-br from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 rounded-2xl p-6 border border-red-100 dark:border-red-900/50">
+          <span class="text-4xl">😺</span>
+          <h3 class="font-bold mt-3">Purr Therapy</h3>
+          <p class="text-gray-600 dark:text-gray-400 text-sm mt-2">A cat's purr vibrates at 25-150 Hz, frequencies that promote bone healing and reduce stress. Cats literally have healing powers!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== CAT QUOTE GENERATOR ====== -->
+  <section class="py-20 md:py-28 bg-gradient-to-br from-cat-500 to-cat-700 relative overflow-hidden">
+    <!-- Decorative -->
+    <div class="absolute top-10 left-10 text-8xl text-white/10 paw-float">🐾</div>
+    <div class="absolute bottom-10 right-10 text-6xl text-white/10 paw-float" style="animation-delay:2s">🐾</div>
+    <div class="absolute top-1/2 left-1/4 text-4xl text-white/5 paw-float" style="animation-delay:1s">🐱</div>
+
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+      <div class="reveal">
+        <span class="text-white/80 font-semibold text-sm uppercase tracking-wider">Daily Inspiration</span>
+        <h2 class="text-3xl md:text-5xl font-bold text-white mt-3 tracking-tight">Cat Quote Generator 📜</h2>
+      </div>
+
+      <div class="reveal delay-100 mt-10 bg-white/10 backdrop-blur-sm rounded-3xl p-8 md:p-12 border border-white/20">
+        <span class="text-6xl text-white/30">"</span>
+        <p id="cat-quote" class="text-xl md:text-2xl text-white font-medium leading-relaxed -mt-6">
+          Time spent with cats is never wasted.
+        </p>
+        <p id="cat-quote-author" class="mt-4 text-cat-200 font-medium">— Sigmund Freud</p>
+      </div>
+
+      <button onclick="generateQuote()" class="reveal delay-200 mt-8 inline-flex items-center gap-2 bg-white text-cat-600 font-semibold px-8 py-3.5 rounded-full hover:bg-cat-50 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0">
+        <span class="iconify" data-icon="lucide:refresh-cw"></span>
+        New Quote
+      </button>
+    </div>
+  </section>
+
+  <!-- ====== CONTACT ====== -->
+  <section id="contact" class="py-20 md:py-28 bg-cream-50 dark:bg-dark-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-2 gap-12 lg:gap-20">
+        <!-- Left Content -->
+        <div class="reveal">
+          <span class="inline-flex items-center gap-2 bg-cat-100 dark:bg-cat-900/50 text-cat-600 dark:text-cat-400 font-semibold text-xs uppercase tracking-wider px-4 py-2 rounded-full">
+            <span class="iconify" data-icon="lucide:mail"></span> Contact Us
+          </span>
+          <h2 class="text-3xl md:text-4xl font-bold mt-4 tracking-tight">Get in Touch 💌</h2>
+          <p class="mt-4 text-gray-600 dark:text-gray-400 leading-relaxed">Have questions about cats? Want to share your cat stories? We'd love to hear from you!</p>
+
+          <div class="mt-8 space-y-4">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-cat-100 dark:bg-cat-900/50 flex items-center justify-center text-xl">📧</div>
+              <div>
+                <p class="font-medium">Email</p>
+                <p class="text-gray-500 dark:text-gray-400 text-sm">hello@cat4you.com</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-cat-100 dark:bg-cat-900/50 flex items-center justify-center text-xl">📍</div>
+              <div>
+                <p class="font-medium">Location</p>
+                <p class="text-gray-500 dark:text-gray-400 text-sm">Cat Lovers Lane, Whisker City 🐾</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-cat-100 dark:bg-cat-900/50 flex items-center justify-center text-xl">😸</div>
+              <div>
+                <p class="font-medium">Social</p>
+                <div class="flex gap-3 mt-1">
+                  <a href="#" class="text-gray-500 hover:text-cat-500 transition"><span class="iconify text-xl" data-icon="lucide:facebook"></span></a>
+                  <a href="#" class="text-gray-500 hover:text-cat-500 transition"><span class="iconify text-xl" data-icon="lucide:twitter"></span></a>
+                  <a href="#" class="text-gray-500 hover:text-cat-500 transition"><span class="iconify text-xl" data-icon="lucide:instagram"></span></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="reveal delay-200">
+          <form id="contactForm" onsubmit="handleContact(event)" class="bg-white dark:bg-dark-800 rounded-2xl p-8 shadow-lg border border-cat-100 dark:border-gray-700">
+            <div class="space-y-5">
+              <div>
+                <label class="block text-sm font-medium mb-2">Your Name</label>
+                <input type="text" required placeholder="John Doe" class="w-full px-4 py-3 rounded-xl bg-cream-50 dark:bg-dark-900 border border-cat-200 dark:border-gray-700 focus:border-cat-500 focus:ring-2 focus:ring-cat-200 dark:focus:ring-cat-800 outline-none transition text-sm">
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-2">Email Address</label>
+                <input type="email" required placeholder="john@example.com" class="w-full px-4 py-3 rounded-xl bg-cream-50 dark:bg-dark-900 border border-cat-200 dark:border-gray-700 focus:border-cat-500 focus:ring-2 focus:ring-cat-200 dark:focus:ring-cat-800 outline-none transition text-sm">
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-2">Message</label>
+                <textarea rows="5" required placeholder="Tell us about your cat! 😸" class="w-full px-4 py-3 rounded-xl bg-cream-50 dark:bg-dark-900 border border-cat-200 dark:border-gray-700 focus:border-cat-500 focus:ring-2 focus:ring-cat-200 dark:focus:ring-cat-800 outline-none transition text-sm resize-none"></textarea>
+              </div>
+              <button type="submit" class="w-full bg-cat-500 hover:bg-cat-600 text-white font-semibold py-3.5 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-cat-500/30 flex items-center justify-center gap-2">
+                <span class="iconify" data-icon="lucide:send"></span>
+                Send Message
+              </button>
+            </div>
+            <!-- Success Message -->
+            <div id="formSuccess" class="hidden mt-4 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 p-4 rounded-xl text-sm text-center">
+              🎉 Message sent successfully! We'll get back to you soon.
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== FOOTER ====== -->
+  <footer class="bg-dark-900 dark:bg-black text-gray-400 pt-16 pb-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <!-- Brand -->
+        <div class="lg:col-span-1">
+          <a href="#home" class="flex items-center gap-2">
+            <span class="text-3xl">🐱</span>
+            <span class="text-xl font-bold text-white">Cat 4 You</span>
+          </a>
+          <p class="mt-4 text-sm leading-relaxed">Your complete guide to cats, breeds, care, and fun facts. Made with 😻 for cat lovers everywhere.</p>
+          <div class="flex gap-3 mt-6">
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 hover:bg-cat-500 flex items-center justify-center transition">
+              <span class="iconify text-white" data-icon="lucide:facebook"></span>
+            </a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 hover:bg-cat-500 flex items-center justify-center transition">
+              <span class="iconify text-white" data-icon="lucide:twitter"></span>
+            </a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 hover:bg-cat-500 flex items-center justify-center transition">
+              <span class="iconify text-white" data-icon="lucide:instagram"></span>
+            </a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 hover:bg-cat-500 flex items-center justify-center transition">
+              <span class="iconify text-white" data-icon="lucide:youtube"></span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div>
+          <h3 class="text-white font-semibold mb-4">Quick Links</h3>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#home" class="hover:text-cat-400 transition">Home</a></li>
+            <li><a href="#about" class="hover:text-cat-400 transition">About Cats</a></li>
+            <li><a href="#breeds" class="hover:text-cat-400 transition">Cat Breeds</a></li>
+            <li><a href="#gallery" class="hover:text-cat-400 transition">Gallery</a></li>
+            <li><a href="#contact" class="hover:text-cat-400 transition">Contact</a></li>
+          </ul>
+        </div>
+
+        <!-- Resources -->
+        <div>
+          <h3 class="text-white font-semibold mb-4">Resources</h3>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#tips" class="hover:text-cat-400 transition">Care Tips</a></li>
+            <li><a href="#facts" class="hover:text-cat-400 transition">Fun Facts</a></li>
+            <li><a href="#videos" class="hover:text-cat-400 transition">Cat Videos</a></li>
+            <li><a href="#" class="hover:text-cat-400 transition">Cat Health Blog</a></li>
+            <li><a href="#" class="hover:text-cat-400 transition">Adoption Guide</a></li>
+          </ul>
+        </div>
+
+        <!-- Newsletter -->
+        <div>
+          <h3 class="text-white font-semibold mb-4">Newsletter 🐾</h3>
+          <p class="text-sm mb-4">Get weekly cat tips and stories!</p>
+          <form onsubmit="handleNewsletter(event)" class="flex gap-2">
+            <input type="email" required placeholder="Your email" class="flex-1 px-4 py-2.5 rounded-xl bg-gray-800 border border-gray-700 focus:border-cat-500 outline-none text-sm text-white placeholder-gray-500">
+            <button type="submit" class="px-4 py-2.5 bg-cat-500 hover:bg-cat-600 text-white rounded-xl transition text-sm font-medium">Go</button>
+          </form>
+          <div id="newsletterMsg" class="hidden mt-2 text-xs text-cat-400">✅ Subscribed!</div>
+        </div>
+      </div>
+
+      <div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <p class="text-sm">© 2025 Cat 4 You. Made with 😻 for cat lovers.</p>
+        <div class="flex gap-6 text-sm">
+          <a href="#" class="hover:text-cat-400 transition">Privacy Policy</a>
+          <a href="#" class="hover:text-cat-400 transition">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ====== SCROLL TO TOP ====== -->
+  <button id="scrollTopBtn" onclick="scrollToTop()" class="fixed bottom-6 right-6 z-40 w-12 h-12 bg-cat-500 hover:bg-cat-600 text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 opacity-0 translate-y-4 pointer-events-none scroll-top-btn">
+    <span class="iconify text-xl" data-icon="lucide:chevron-up"></span>
+  </button>
+
+  <!-- ====== JAVASCRIPT ====== -->
+  <script>
+    // ====== LOADER ======
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('loader').classList.add('hidden');
+      }, 1200);
+    });
+
+    // ====== NAVBAR SCROLL EFFECT ======
+    const navbar = document.getElementById('navbar');
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      const current = window.scrollY;
+      if (current > 80) {
+        navbar.classList.add('bg-white/90', 'dark:bg-dark-900/90', 'backdrop-blur-md', 'shadow-sm');
+      } else {
+        navbar.classList.remove('bg-white/90', 'dark:bg-dark-900/90', 'backdrop-blur-md', 'shadow-sm');
+      }
+      lastScroll = current;
+
+      // Scroll to top button
+      const btn = document.getElementById('scrollTopBtn');
+      if (current > 500) {
+        btn.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+        btn.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto');
+      } else {
+        btn.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
+        btn.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto');
+      }
+    });
+
+    // ====== MOBILE MENU ======
+    let mobileOpen = false;
+    function toggleMobileMenu() {
+      mobileOpen = !mobileOpen;
+      const menu = document.getElementById('mobileMenu');
+      menu.classList.toggle('hidden', !mobileOpen);
+    }
+    function closeMobileMenu() {
+      mobileOpen = false;
+      document.getElementById('mobileMenu').classList.add('hidden');
+    }
+
+    // ====== DARK MODE ======
+    function toggleDarkMode() {
+      document.documentElement.classList.toggle('dark');
+      const isDark = document.documentElement.classList.contains('dark');
+      document.getElementById('darkIcon').textContent = isDark ? '☀️' : '🌙';
+      localStorage.setItem('cat4you-dark', isDark ? 'dark' : 'light');
+    }
+    // Init dark mode
+    if (localStorage.getItem('cat4you-dark') === 'dark' || 
+        (!localStorage.getItem('cat4you-dark') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+      document.getElementById('darkIcon').textContent = '☀️';
+    }
+
+    // ====== SCROLL REVEAL ======
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // ====== SCROLL TO TOP ======
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ====== BREED SEARCH ======
+    function searchBreeds() {
+      const query = document.getElementById('breedSearch').value.toLowerCase().trim();
+      const cards = document.querySelectorAll('.breed-card');
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const breed = card.getAttribute('data-breed');
+        const name = card.querySelector('h3').textContent.toLowerCase();
+        const desc = card.querySelector('p').textContent.toLowerCase();
+        const match = breed.includes(query) || name.includes(query) || desc.includes(query);
+        card.style.display = match ? '' : 'none';
+        if (match) visibleCount++;
+      });
+
+      document.getElementById('noResults').classList.toggle('hidden', visibleCount > 0);
+    }
+
+    // ====== LIGHTBOX ======
+    function openLightbox(el) {
+      const img = el.querySelector('img');
+      const lb = document.getElementById('lightbox');
+      document.getElementById('lightbox-img').src = img.src;
+      lb.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeLightbox();
+    });
+
+    // ====== SLIDER ======
+    let sliderIndex = 0;
+    function getSlideWidth() {
+      if (window.innerWidth >= 1024) return 33.333;
+      if (window.innerWidth >= 768) return 50;
+      return 100;
+    }
+    function getMaxIndex() {
+      const total = document.querySelectorAll('#sliderTrack > div').length;
+      const visible = window.innerWidth >= 1024 ? 3 : window.innerWidth >= 768 ? 2 : 1;
+      return Math.max(0, total - visible);
+    }
+    function updateSlider() {
+      const track = document.getElementById('sliderTrack');
+      track.style.transform = `translateX(-${sliderIndex * getSlideWidth()}%)`;
+    }
+    function slideNext() {
+      sliderIndex = Math.min(sliderIndex + 1, getMaxIndex());
+      updateSlider();
+    }
+    function slidePrev() {
+      sliderIndex = Math.max(sliderIndex - 1, 0);
+      updateSlider();
+    }
+
+    // ====== CAT QUOTE GENERATOR ======
+    const catQuotes = [
+      { text: "Time spent with cats is never wasted.", author: "Sigmund Freud" },
+      { text: "Cats are connoisseurs of comfort.", author: "James Herriot" },
+      { text: "In ancient times cats were worshipped as gods; they have not forgotten this.", author: "Terry Pratchett" },
+      { text: "What greater gift than the love of a cat.", author: "Charles Dickens" },
+      { text: "I have studied many philosophers and many cats. The wisdom of cats is infinitely superior.", author: "Hippolyte Taine" },
+      { text: "As every cat owner knows, nobody owns a cat.", author: "Ellen Perry Berkeley" },
+      { text: "Cats choose us; we don't own them.", author: "Kristin Cast" },
+      { text: "Cats are intended to teach us that not everything in nature has a purpose.", author: "Garrison Keillor" },
+      { text: "A cat has absolute emotional honesty: human beings, for one reason or another, may hide their feelings, but a cat does not.", author: "Ernest Hemingway" },
+      { text: "The smallest feline is a masterpiece.", author: "Leonardo da Vinci" },
+      { text: "Curiosity killed the cat, but satisfaction brought it back.", author: "Eugene O'Neill" },
+      { text: "A meow massages the heart.", author: "Stuart McMillan" },
+      { text: "Cats are mysterious kind of folk — there is more passing in their minds than we are aware of.", author: "Sir Walter Scott" },
+      { text: "Everything I know I learned from my cat.", author: "Anonymous" },
+    ];
+    function generateQuote() {
+      const quoteEl = document.getElementById('cat-quote');
+      const authorEl = document.getElementById('cat-quote-author');
+      quoteEl.style.opacity = 0;
+      setTimeout(() => {
+        const q = catQuotes[Math.floor(Math.random() * catQuotes.length)];
+        quoteEl.textContent = q.text;
+        authorEl.textContent = `— ${q.author}`;
+        quoteEl.style.opacity = 1;
+      }, 300);
+    }
+
+    // ====== CONTACT FORM ======
+    function handleContact(e) {
+      e.preventDefault();
+      document.getElementById('formSuccess').classList.remove('hidden');
+      e.target.reset();
+      setTimeout(() => {
+        document.getElementById('formSuccess').classList.add('hidden');
+      }, 4000);
+    }
+
+    // ====== NEWSLETTER ======
+    function handleNewsletter(e) {
+      e.preventDefault();
+      document.getElementById('newsletterMsg').classList.remove('hidden');
+      e.target.reset();
+      setTimeout(() => {
+        document.getElementById('newsletterMsg').classList.add('hidden');
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
